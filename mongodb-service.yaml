@@ -1,0 +1,13 @@
+# Service example
+# To activate run: `kubectl apply -f mongodb-service.yaml`
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+spec:
+  selector:
+    app: mongodb
+  ports:
+  - protocol: TCP
+    port: 27017
+    targetPort: 27017

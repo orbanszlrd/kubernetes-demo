@@ -1,0 +1,57 @@
+# Deployment and External Service (LoadBalancer) in one file
+# Before activate need to run: `kubectl apply -f mongodb-secret.yaml`
+# Before activate need to run: `kubectl apply -f mongodb-configmap.yaml`
+# To activate run: `kubectl apply -f mongo-express.yaml`
+# To start in minikube run: `minikube service mongo-express-service`
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-express
+spec:
+  selector:
+    matchLabels:
+      app: mongo-express
+  template:
+    metadata:
+      labels:
+        app: mongo-express
+    spec:
+      containers:
+      - name: mongo-express
+        image: mongo-express
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8081
+        env:
+        - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+          valueFrom: 
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongo-username
+        - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongo-password
+        - name: ME_CONFIG_MONGODB_SERVER
+          valueFrom: 
+            configMapKeyRef:
+              name: mongodb-configmap
+              key: database_url
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-express-service
+spec:
+  selector:
+    app: mongo-express
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 8081
+    targetPort: 8081
+    nodePort: 30000
