@@ -3,6 +3,7 @@
 ### Kubernetes
 - [Official Website](https://kubernetes.io/)
 - [GitHub](https://github.com/kubernetes)
+- [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/)
 
 #### Minikube
 - [Official Website](https://kubernetes.io/docs/tasks/tools/)
